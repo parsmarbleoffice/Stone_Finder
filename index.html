@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نقشه کارخانه‌های سنگ صنعتی</title>
+<!-- فونت فارسی وزیرمتن -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<!-- استایل اختصاصی -->
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <header class="header">
+      <div class="brand">
+        <span class="brand-icon">⛰️</span>
+        <div>
+          <h1>سنگ‌یاب</h1>
+          <p class="brand-sub">دایره‌المعارف کارخانه‌های سنگ صنعتی</p>
+        </div>
+        <button class="settings-btn" id="settingsBtn" title="تنظیمات اتصال" aria-label="تنظیمات اتصال">⚙️</button>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="جستجوی نام کارخانه، محصول، آدرس..." autocomplete="off">
+      </div>
+      <div class="filters" id="statusFilters">
+        <button class="chip active" data-status="all">همه</button>
+        <button class="chip chip-active" data-status="active">فعال</button>
+        <button class="chip chip-inactive" data-status="inactive">غیرفعال</button>
+      </div>
+      <div class="count" id="resultCount"></div>
+    </div>
+
+    <div class="list" id="factoryList"></div>
+    <div class="state" id="stateBox"></div>
+    <footer class="sidebar-footer">داده‌ها از Google Sheet خوانده می‌شود</footer>
+  </aside>
+
+  <main class="map-area">
+    <div id="map"></div>
+    <button class="mobile-toggle" id="mobileToggle">☰ لیست کارخانه‌ها</button>
+  </main>
+</div>
+
+<!-- مودال جزئیات -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+
+<!-- مودال رمز ورود -->
+<div class="modal-backdrop" id="pwBackdrop">
+  <div class="modal modal-small" role="dialog" aria-modal="true">
+    <h2>🔐 ورود به تنظیمات</h2>
+    <p class="pw-hint">برای دسترسی به صفحه تنظیمات، رمز ورود را وارد کنید.</p>
+    <input type="password" id="pwInput" class="text-input" placeholder="رمز ورود" autocomplete="off">
+    <div class="pw-error" id="pwError" hidden>رمز ورود نادرست است.</div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="pwSubmit">ورود</button>
+      <button class="btn btn-ghost" id="pwCancel">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<!-- مودال تنظیمات -->
+<div class="modal-backdrop" id="settingsBackdrop">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="settingsClose">✕</button>
+    <h2>⚙️ تنظیمات اتصال</h2>
+    <p class="pw-hint">آدرس CSV منتشرشده گوگل‌شیت را وارد کنید. این آدرس در مرورگر شما (localStorage) ذخیره می‌شود.</p>
+    <label class="field-label" for="csvUrlInput">آدرس Google Sheets CSV</label>
+    <input type="url" id="csvUrlInput" class="text-input" dir="ltr" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
+    <div class="test-result" id="testResult"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="saveUrlBtn">💾 ذخیره</button>
+      <button class="btn btn-amber" id="testUrlBtn">🔌 تست اتصال</button>
+      <button class="btn btn-ghost" id="resetUrlBtn">♻️ بازگردانی پیش‌فرض</button>
+    </div>
+    <div class="toast" id="toast" hidden></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="config.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
